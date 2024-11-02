@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.opmode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,26 +8,16 @@ import java.util.Timer;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-@Config
-@TeleOp(name = "ElevadorNenzo")
 
-public class ElevadorNenzo extends LinearOpMode {
+@TeleOp(name = "SetPoints")
 
-    public static double kP = 0.045;
-    public static double kI = 0.0025;
-    public static double kD = 0.0005;
-    public static double kF = 0;
-    public static double positionLift = 0;
-    double position = 0;
+public class SetPoints extends LinearOpMode {
+
     DcMotor elevador;
     DcMotor elevador2;
-    PIDFController pidf = new PIDFController(kP, kI, kD, kF);
 
     ElapsedTime timer = new ElapsedTime();
 
-    double setPoint = 0;
-    double lastError = 0;
-    double integral = 0;
     double lastTimestamp = 0;
 
     @Override
@@ -46,19 +35,16 @@ public class ElevadorNenzo extends LinearOpMode {
         elevador2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevador2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        elevador.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+        elevador2.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+
         waitForStart();
 
         while (opModeIsActive()) {
-            double currentPosition = elevador.getCurrentPosition();
-            pidf.setP(kP);
-            pidf.setI(kI);
-            pidf.setD(kD);
-            pidf.setF(kF);
-            double output = pidf.calculate(currentPosition, positionLift);
-            elevador.setPower(output);
-            elevador2.setPower(output);
-            telemetry.addData("currentPosition", currentPosition);
-            telemetry.addData("positionLift", positionLift);
+            elevador.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+            elevador2.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+
+            telemetry.addData("elevador", elevador.getCurrentPosition());
             telemetry.update();
         }
     }
